@@ -33,7 +33,7 @@ h2{font-size:1rem;margin:12px 0 0}
 #crop-canvas{width:100%;display:block;border-radius:8px;touch-action:none}
 
 /* Rutenett */
-.grid{display:grid;grid-template-columns:repeat(8,1fr);width:100%;aspect-ratio:1;
+.grid{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));grid-template-rows:repeat(8,minmax(0,1fr));width:100%;aspect-ratio:1;
   border:3px solid var(--thick);background:var(--card);user-select:none;-webkit-user-select:none}
 .cell{position:relative;display:flex;align-items:center;justify-content:center;
   border-right:1px solid var(--thin);border-bottom:1px solid var(--thin);min-width:0;min-height:0;cursor:pointer}
@@ -41,8 +41,10 @@ h2{font-size:1rem;margin:12px 0 0}
 .cell.tb{border-bottom:3px solid var(--thick)}
 .cell.c7{border-right:0}
 .cell.r7{border-bottom:0}
+.cell{overflow:hidden}
 .cell.given{font-weight:600;font-size:clamp(1.2rem,7vw,2.2rem);cursor:default}
-#review-grid .cell.given{cursor:pointer}
+#review-grid .cell{overflow:hidden}
+.cell.given{cursor:pointer}
 .cell.selected{background:rgba(255,200,0,.35);outline:2px solid #e0a800;outline-offset:-2px;z-index:1}
 .cell.conflict .final{color:var(--red);text-decoration:underline}
 .final{font-size:clamp(1.4rem,8vw,2.6rem);font-weight:700;color:var(--final)}

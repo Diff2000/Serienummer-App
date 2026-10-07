@@ -132,11 +132,11 @@
     draft = { givens: res.givens, vWalls: res.vWalls, hWalls: res.hWalls, warped };
     $('review-photo').src = warped.toDataURL('image/jpeg', 0.7);
     $('puzzle-name').value = 'Oppgave ' + new Date().toLocaleDateString('nb-NO');
-    const unread = res.givens.flat().filter(v => v < 0).length;
     $('scan-status').textContent = !res.ocrOk
-      ? 'Tallgjenkjenning er ikke tilgjengelig (offline?). Rutene med «?» må settes manuelt.'
-      : res.found + ' trykte tall funnet' + (unread ? ', ' + unread + ' må kontrolleres (merket «?»).' : '.');
-    renderReview();
+      ? 'Tallgjenkjenning er ikke tilgjengelig (offline?). Sett de trykte tallene selv.'
+      : res.found + ' trykte tall funnet' + (res.unknown ? ', ' + res.unknown + ' kunne ikke leses og er latt stå tomme.' : '.');
+    reviewSel = null;
+    renderReview(); renderReviewPicker();
     show('review');
   });
 
@@ -154,7 +154,8 @@
       cell.className = 'cell given';
       wallClasses(cell, r, c, draft.vWalls, draft.hWalls);
       const v = draft.givens[r][c];
-      cell.textContent = v > 0 ? v : v < 0 ? '?' : '';
+      cell.textContent = v > 0 ? v : '';
+      if (reviewSel && reviewSel[0] === r && reviewSel[1] === c) cell.classList.add('selected');
       cell.addEventListener('click', e => reviewTap(e, cell, r, c));
       g.appendChild(cell);
     }
@@ -172,16 +173,37 @@
       else return;
       renderReview(); return;
     }
-    const cur = draft.givens[r][c];
-    const ans = prompt('Fast tall i denne ruten (1–8). La stå tomt for ingen.', cur > 0 ? cur : '');
-    if (ans === null) return;
-    const n = parseInt(ans, 10);
-    draft.givens[r][c] = n >= 1 && n <= N ? n : 0;
-    renderReview();
+    reviewSel = [r, c];
+    renderReview(); renderReviewPicker();
   }
 
+  let reviewSel = null;
+  function renderReviewPicker() {
+    $('review-picker').classList.toggle('off', !reviewSel);
+    $('review-hint').textContent = reviewSel
+      ? 'Rute rad ' + (reviewSel[0] + 1) + ', kolonne ' + (reviewSel[1] + 1) + '. Trykk tallet igjen for å fjerne det.'
+      : 'Trykk på en rute for å sette et fast tall.';
+    const box = $('review-buttons'); box.innerHTML = '';
+    for (let n = 1; n <= N; n++) {
+      const b = document.createElement('button');
+      b.textContent = n;
+      if (reviewSel && draft.givens[reviewSel[0]][reviewSel[1]] === n) b.className = 'f';
+      b.addEventListener('click', () => {
+        if (!reviewSel) return;
+        const [r, c] = reviewSel;
+        draft.givens[r][c] = draft.givens[r][c] === n ? 0 : n;
+        renderReview(); renderReviewPicker();
+      });
+      box.appendChild(b);
+    }
+  }
+  $('review-clear').addEventListener('click', () => {
+    if (!reviewSel) return;
+    draft.givens[reviewSel[0]][reviewSel[1]] = 0;
+    renderReview(); renderReviewPicker();
+  });
+
   $('btn-save').addEventListener('click', () => {
-    if (draft.givens.flat().some(v => v < 0)) { alert('Noen ruter er merket «?». Sett riktig tall eller tøm dem først.'); return; }
     const th = document.createElement('canvas'); th.width = th.height = 120;
     th.getContext('2d').drawImage(draft.warped, 0, 0, 120, 120);
     const p = {
@@ -260,7 +282,7 @@
       if (sel) {
         const [r, c] = sel;
         if (puz.finals[r][c] === n) b.className = 'f';
-        else if (!puz.finals[r][c] && puz.marks[r][c][n]) b.className = puz.marks[r][c][n];
+        else if (puz.marks[r][c][n]) b.className = puz.marks[r][c][n];
       }
       b.addEventListener('click', () => cycle(n));
       box.appendChild(b);
@@ -270,13 +292,13 @@
   function cycle(n) {
     if (!sel) return;
     const [r, c] = sel, m = puz.marks[r][c];
-    if (puz.finals[r][c] === n) { puz.finals[r][c] = 0; }          // svar -> av
+    if (puz.finals[r][c] === n) { puz.finals[r][c] = 0; delete m[n]; }   // svar -> av, de andre tallene vises igjen
     else {
-      if (puz.finals[r][c]) puz.finals[r][c] = 0;                   // forlat svar-visning
+      puz.finals[r][c] = 0;                                              // forlat svar-visning
       const st = m[n];
       if (!st) m[n] = 'r';
       else if (st === 'r') m[n] = 'g';
-      else { delete m[n]; puz.finals[r][c] = n; puz.marks[r][c] = {}; }   // grønn -> endelig svar
+      else puz.finals[r][c] = n;                                         // grønn -> endelig svar (markeringene beholdes)
     }
     persist(puz); renderPlay(); renderPicker();
   }

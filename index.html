@@ -44,8 +44,13 @@
   </header>
   <main>
     <p id="scan-status" class="muted"></p>
-    <p class="muted">Trykk i en rute for å sette/fjerne et fast tall. Trykk nær en kant for å bytte mellom tykk og tynn linje. Håndskrevne tall er fjernet.</p>
+    <p class="muted">Velg en rute og trykk tallet som er trykt der. Trykk nær en kant for å bytte mellom tykk og tynn linje. Håndskrevne tall er fjernet.</p>
     <div id="review-grid" class="grid"></div>
+    <div id="review-picker" class="picker off">
+      <div id="review-hint" class="muted">Trykk på en rute for å sette et fast tall.</div>
+      <div id="review-buttons" class="picker-buttons"></div>
+      <button id="review-clear" class="btn small">Tøm rute</button>
+    </div>
     <details><summary>Vis utrettet bilde</summary><img id="review-photo" alt="Utrettet bilde"></details>
     <input id="puzzle-name" class="text" placeholder="Navn på oppgaven" maxlength="40">
     <button id="btn-save" class="btn primary big">Lagre og spill</button>

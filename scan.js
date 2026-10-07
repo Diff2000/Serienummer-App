@@ -218,7 +218,6 @@
       const g = findGlyph(ink, r, c);
       if (g) glyphs.push({ r, c, g });
     }
-    for (const g of glyphs) givens[g.r][g.c] = -1;   // -1 = fant et tall, men ikke lest
     let ocrOk = true, unknown = 0;
     try {
       const T = await loadTesseract();
