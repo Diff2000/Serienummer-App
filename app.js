@@ -306,7 +306,7 @@
     const pk = $('picker'), box = $('picker-buttons');
     pk.classList.toggle('off', !sel);
     $('picker-hint').textContent = sel
-      ? 'Rute rad ' + (sel[0] + 1) + ', kolonne ' + (sel[1] + 1) + '. Trykk et tall flere ganger: rød → grønn → svar → av.'
+      ? 'Rute rad ' + (sel[0] + 1) + ', kolonne ' + (sel[1] + 1) + '. Trykk et tall flere ganger: grønn → rød → svar → av.'
       : 'Trykk på en ledig rute.';
     box.innerHTML = '';
     for (let n = 1; n <= N; n++) {
@@ -329,9 +329,9 @@
     else {
       puz.finals[r][c] = 0;                                              // forlat svar-visning
       const st = m[n];
-      if (!st) m[n] = 'r';
-      else if (st === 'r') m[n] = 'g';
-      else puz.finals[r][c] = n;                                         // grønn -> endelig svar (markeringene beholdes)
+      if (!st) m[n] = 'g';
+      else if (st === 'g') m[n] = 'r';
+      else puz.finals[r][c] = n;                                         // rød -> endelig svar (markeringene beholdes)
     }
     persist(puz); renderPlay(); renderPicker();
   }

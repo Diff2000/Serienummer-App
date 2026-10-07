@@ -10,7 +10,7 @@ Web-app for å løse «Serienummer»-oppgaver (8×8-rutenett med tykke og tynne 
 2. **Marker rutenettet:** dra de fire sirklene til hjørnene av 8×8-rutenettet.
 3. **Kontroller:** appen finner tykke linjer og trykte tall (håndskrift filtreres bort). Velg en rute og trykk tallet for å sette eller fjerne et fast tall. Trykk nær en kant for å bytte mellom tykk og tynn linje. Gi oppgaven et navn og lagre.
 4. **Spill:** trykk på en ledig rute og trykk et tall 1–8. Trykk flere ganger på samme tall for å bytte:
-   rød (må være med) → grønn (kanskje) → svar (stort tall) → av.
+   grønn (kanskje) → rød (må være med) → svar (stort tall) → av.
    Flere tall kan stå som rød/grønn i samme rute. Trykker du svaret av igjen, vises de andre markeringene på nytt. Svar som gjentar seg i rad eller kolonne markeres i rødt.
 5. **Endre navn** ved å trykke på tittelen eller ✏️ i spillet, eller ✏️ i listen på startsiden.
 6. **Rediger linjer** (knapp under rutenettet) lar deg også etter at du har begynt å løse bytte mellom tykk og tynn linje. Tallene dine beholdes.
