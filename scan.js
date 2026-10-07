@@ -283,7 +283,7 @@
         }
       }
       const bh = maxY - minY + 1, bw = maxX - minX + 1, fill = px.length / (bh * bw);
-      if (edge || bh < 24 || bh > 62 || bw < 5 || bw > 48 || bw > bh * 1.4 || fill < 0.12 || px.length < 80) continue;
+      if (edge || bh < 18 || bh > 62 || bw < 5 || bw > 48 || bw > bh * 1.4 || fill < 0.12 || px.length < 80) continue;
       if (!best || px.length > best.px.length) best = { px, minX, maxX, minY, maxY, bw, bh, x0, y0, w };
     }
     if (!best) return null;
@@ -318,6 +318,7 @@
     const cx = cv.getContext('2d'); cx.imageSmoothingQuality = 'high';
     cx.fillStyle = '#fff'; cx.fillRect(0, 0, cv.width, cv.height);
     cx.drawImage(small, 0, 0, cv.width, cv.height);
+    cv.glyphHeight = best.bh;
     return cv;
   }
 
@@ -345,6 +346,14 @@
     for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
       const g = findGlyph(ink, L.lum, r, c);
       if (g) { glyphs.push({ r, c, g }); if (window.DEBUG_GLYPHS) window.DEBUG_GLYPHS.push([r, c, g.toDataURL()]); }
+    }
+    // Håndskrevne tall (ofte i svart penn) er gjerne mye mindre enn de trykte. Trykte tall har samme
+    // størrelse overalt, så vi bruker de største som referanse og dropper tegn som er tydelig mindre.
+    if (glyphs.length) {
+      const hs = glyphs.map(x => x.g.glyphHeight).sort((a, b) => b - a);
+      const ref = hs[Math.min(hs.length - 1, Math.floor(hs.length * 0.3))];
+      const minH = Math.max(0.27 * CELL, 0.78 * ref);
+      for (let i = glyphs.length - 1; i >= 0; i--) if (glyphs[i].g.glyphHeight < minH) glyphs.splice(i, 1);
     }
     let ocrOk = true, unknown = 0;
     try {
