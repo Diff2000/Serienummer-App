@@ -19,14 +19,25 @@
   }
 
   /* ---------- Navigasjon ---------- */
-  function show(name) {
+  // Nettleserens tilbake-knapp skal gå til menyen, ikke ut av appen.
+  try { history.replaceState({ s: 'home' }, ''); } catch (e) {}
+  function show(name, fromPop) {
     screens.forEach(s => $('screen-' + s).hidden = s !== name);
     window.scrollTo(0, 0);
+    if (fromPop || name === 'home') return;
+    try {
+      if (history.state && history.state.s && history.state.s !== 'home') history.replaceState({ s: name }, '');
+      else history.pushState({ s: name }, '');
+    } catch (e) {}
+  }
+  window.addEventListener('popstate', () => { renderHome(); show('home', true); });
+  function goHome() {
+    if (history.state && history.state.s && history.state.s !== 'home') history.back();
+    else { renderHome(); show('home', true); }
   }
   document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => {
     const t = b.dataset.go;
-    if (t === 'home') renderHome();
-    show(t);
+    if (t === 'home') goHome(); else show(t);
   }));
   function busy(text) { $('busy').hidden = !text; if (text) $('busy-text').textContent = text; }
 
