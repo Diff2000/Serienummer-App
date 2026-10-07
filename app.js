@@ -140,7 +140,7 @@
   $('btn-scan').addEventListener('click', async () => {
     busy('Retter opp bildet…');
     await new Promise(r => setTimeout(r, 30));
-    const warped = Scan.warp(srcCanvas, corners);
+    const warped = Scan.warp(srcCanvas, Scan.refine(srcCanvas, corners));
     busy('Finner linjer og tall…');
     await new Promise(r => setTimeout(r, 30));
     const res = await Scan.analyze(warped, (i, n) => busy('Leser tall ' + i + '/' + n + '…'));
