@@ -18,11 +18,16 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Bygg (stempler filer med commit-versjon mot cache)
         run: |
           mkdir _site && cp index.html style.css app.js scan.js _site/
           sed -i "s/__BUILD__/${GITHUB_SHA::10}/g" _site/index.html
-          sed -i "s/__DATE__/$(date -u +'%Y-%m-%d %H:%M') UTC/" _site/index.html
+          # Versjon vXX.YY teller opp for hvert commit (v00.01 = første commit etter 5 commits)
+          N=$(( $(git rev-list --count HEAD) - 5 ))
+          VER=$(printf "v%02d.%02d" $(( N / 100 )) $(( N % 100 )))
+          sed -i "s/__VERSION__/$VER/" _site/index.html
           echo "{\"build\":\"${GITHUB_SHA::10}\"}" > _site/version.json
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
