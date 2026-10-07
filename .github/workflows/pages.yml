@@ -18,7 +18,11 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - run: mkdir _site && cp index.html style.css app.js scan.js _site/
+      - name: Bygg (stempler filer med commit-versjon mot cache)
+        run: |
+          mkdir _site && cp index.html style.css app.js scan.js _site/
+          sed -i "s/__BUILD__/${GITHUB_SHA::10}/g" _site/index.html
+          echo "{\"build\":\"${GITHUB_SHA::10}\"}" > _site/version.json
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

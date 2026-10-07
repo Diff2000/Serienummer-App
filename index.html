@@ -5,7 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1f2a44">
 <title>Serienummer</title>
-<link rel="stylesheet" href="style.css">
+<meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+<link rel="stylesheet" href="style.css?v=__BUILD__">
+<script>
+/* GitHub Pages cacher i ca. 10 min. Denne sjekken henter version.json uten cache og laster siden på nytt hvis det finnes en nyere versjon. */
+(function () {
+  var BUILD = '__BUILD__';
+  if (BUILD.indexOf('__') === 0) return;               // lokal kjøring
+  fetch('version.json?t=' + Date.now(), { cache: 'no-store' })
+    .then(function (r) { return r.json(); })
+    .then(function (v) {
+      if (v.build && v.build !== BUILD && location.search.indexOf('r=' + v.build) < 0)
+        location.replace(location.pathname + '?r=' + v.build);
+    }).catch(function () {});
+})();
+</script>
 </head>
 <body>
 
@@ -81,7 +95,7 @@
 
 <div id="busy" hidden><div class="spinner"></div><div id="busy-text">Jobber…</div></div>
 
-<script src="scan.js"></script>
-<script src="app.js"></script>
+<script src="scan.js?v=__BUILD__"></script>
+<script src="app.js?v=__BUILD__"></script>
 </body>
 </html>
