@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1f2a44">
+<title>Serienummer</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Hjem -->
+<section id="screen-home" class="screen">
+  <header class="bar"><h1>Serienummer</h1></header>
+  <main>
+    <label class="btn primary big" for="file-camera">📷 Ta bilde av oppgave</label>
+    <input id="file-camera" type="file" accept="image/*" capture="environment" hidden>
+    <label class="btn" for="file-gallery">🖼️ Velg bilde fra galleri</label>
+    <input id="file-gallery" type="file" accept="image/*" hidden>
+    <h2>Lagrede oppgaver</h2>
+    <ul id="puzzle-list" class="list"></ul>
+    <p id="empty-msg" class="muted">Ingen oppgaver ennå. Ta bilde av en serienummer-oppgave for å starte.</p>
+  </main>
+</section>
+
+<!-- Velg hjørner -->
+<section id="screen-crop" class="screen" hidden>
+  <header class="bar">
+    <button class="icon" data-go="home" aria-label="Tilbake">←</button>
+    <h1>Marker rutenettet</h1>
+  </header>
+  <main>
+    <p class="muted">Dra de fire sirklene til hjørnene av 8×8-rutenettet (ytterkantene).</p>
+    <div id="crop-wrap"><canvas id="crop-canvas"></canvas></div>
+    <button id="btn-scan" class="btn primary big">Skann oppgave</button>
+  </main>
+</section>
+
+<!-- Kontroller skannet -->
+<section id="screen-review" class="screen" hidden>
+  <header class="bar">
+    <button class="icon" data-go="crop" aria-label="Tilbake">←</button>
+    <h1>Kontroller</h1>
+  </header>
+  <main>
+    <p id="scan-status" class="muted"></p>
+    <p class="muted">Trykk i en rute for å sette/fjerne et fast tall. Trykk nær en kant for å bytte mellom tykk og tynn linje. Håndskrevne tall er fjernet.</p>
+    <div id="review-grid" class="grid"></div>
+    <details><summary>Vis utrettet bilde</summary><img id="review-photo" alt="Utrettet bilde"></details>
+    <input id="puzzle-name" class="text" placeholder="Navn på oppgaven" maxlength="40">
+    <button id="btn-save" class="btn primary big">Lagre og spill</button>
+  </main>
+</section>
+
+<!-- Spill -->
+<section id="screen-play" class="screen" hidden>
+  <header class="bar">
+    <button class="icon" data-go="home" aria-label="Tilbake">←</button>
+    <h1 id="play-title">Oppgave</h1>
+    <button id="btn-reset" class="icon" aria-label="Nullstill">⟲</button>
+  </header>
+  <main>
+    <div id="play-grid" class="grid"></div>
+    <div id="picker" class="picker">
+      <div id="picker-hint" class="muted">Trykk på en ledig rute.</div>
+      <div id="picker-buttons" class="picker-buttons"></div>
+      <div class="legend">
+        <span><i class="dot r"></i>må være med</span>
+        <span><i class="dot g"></i>kanskje</span>
+        <span><i class="dot f"></i>svar</span>
+      </div>
+      <button id="btn-clear" class="btn small">Tøm rute</button>
+    </div>
+  </main>
+</section>
+
+<div id="busy" hidden><div class="spinner"></div><div id="busy-text">Jobber…</div></div>
+
+<script src="scan.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
