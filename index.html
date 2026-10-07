@@ -15,8 +15,6 @@
   fetch('version.json?t=' + Date.now(), { cache: 'no-store' })
     .then(function (r) { return r.json(); })
     .then(function (v) {
-      var f = document.getElementById('version');
-      if (f && v.version) f.textContent = v.version;
       if (v.build && v.build !== BUILD && location.search.indexOf('r=' + v.build) < 0)
         location.replace(location.pathname + '?r=' + v.build);
     }).catch(function () {});
@@ -36,7 +34,7 @@
     <h2>Lagrede oppgaver</h2>
     <ul id="puzzle-list" class="list"></ul>
     <p id="empty-msg" class="muted">Ingen oppgaver ennå. Ta bilde av en serienummer-oppgave for å starte.</p>
-    <footer id="version">__VERSION__</footer>
+    <footer id="version">Sist endret: 2026-10-07 23:50</footer>
   </main>
 </section>
 

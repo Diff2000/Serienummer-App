@@ -29,16 +29,12 @@ Ren HTML/CSS/JavaScript, ingen bygging eller avhengigheter.
 
 Skanningen skjer lokalt i nettleseren. Trykte tall leses med [Tesseract.js](https://github.com/naptha/tesseract.js), som lastes fra nett første gang du skanner (krever internett). Tall som ikke kan leses, blir stående tomme.
 
-## Publisering og versjon
+## Publisering
 
-GitHub Pages deployes av `.github/workflows/pages.yml` ved hver push. Workflowen:
+GitHub Pages deployes av `.github/workflows/pages.yml` ved hver push (Settings → Pages → Source må stå på **GitHub Actions**). Workflowen stempler JS/CSS med commit-id (unngår gammel cache) og skriver `version.json`, som siden bruker til å laste seg selv på nytt når det finnes en nyere versjon.
 
-- stempler JS/CSS med commit-id (unngår gammel cache),
-- lager versjonsnummeret `vXX.YY`, som teller opp per commit (v00.01 er første),
-- skriver `version.json`, som siden bruker til å laste seg selv på nytt når det finnes en nyere versjon.
-
-Versjonsnummeret vises nederst på startsiden.
+Nederst på startsiden står «Sist endret» med dato og klokkeslett (norsk tid). Den teksten settes for hånd rett før hver commit.
 
 ## Kjøre lokalt
 
-Åpne `index.html` i en nettleser, eller start en enkel server, for eksempel `python3 -m http.server`. Lokalt vises versjonsnummeret som plassholder.
+Åpne `index.html` i en nettleser, eller start en enkel server, for eksempel `python3 -m http.server`. 
