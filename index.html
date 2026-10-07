@@ -76,7 +76,9 @@
 <section id="screen-play" class="screen" hidden>
   <header class="bar">
     <button class="icon" data-go="home" aria-label="Tilbake">←</button>
-    <h1 id="play-title">Oppgave</h1>
+    <h1 id="play-title" title="Trykk for å endre navn">Oppgave</h1>
+    <input id="play-title-input" class="title-input" maxlength="40" hidden>
+    <button id="btn-rename" class="icon" aria-label="Endre navn">✏️</button>
     <button id="btn-reset" class="icon" aria-label="Nullstill">⟲</button>
   </header>
   <main>

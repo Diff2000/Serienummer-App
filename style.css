@@ -79,3 +79,5 @@ details img{width:100%;margin-top:8px;border-radius:8px}
 #play-grid.editing{outline:3px dashed #e0a800;outline-offset:3px}
 #play-grid.editing .cell{cursor:crosshair}
 #btn-edit.on{background:#e0a800;border-color:#e0a800;color:#111}
+.title-input{flex:1;min-width:0;font-size:1.1rem;font-weight:700;padding:4px 8px;border-radius:6px;border:0;background:#fff;color:#111}
+#play-title{cursor:text;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

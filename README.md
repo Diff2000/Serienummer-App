@@ -12,8 +12,9 @@ Web-app for å løse «Serienummer»-oppgaver (8×8-rutenett med tykke og tynne 
 4. **Spill:** trykk på en ledig rute og trykk et tall 1–8. Trykk flere ganger på samme tall for å bytte:
    rød (må være med) → grønn (kanskje) → svar (stort tall) → av.
    Flere tall kan stå som rød/grønn i samme rute. Trykker du svaret av igjen, vises de andre markeringene på nytt. Svar som gjentar seg i rad eller kolonne markeres i rødt.
-5. **Rediger linjer** (knapp under rutenettet) lar deg også etter at du har begynt å løse bytte mellom tykk og tynn linje. Tallene dine beholdes.
-6. **Marker som løst** med knappen nederst. Løste oppgaver får en grønn merkelapp i listen.
+5. **Endre navn** ved å trykke på tittelen eller ✏️ i spillet, eller ✏️ i listen på startsiden.
+6. **Rediger linjer** (knapp under rutenettet) lar deg også etter at du har begynt å løse bytte mellom tykk og tynn linje. Tallene dine beholdes.
+7. **Marker som løst** med knappen nederst. Løste oppgaver får en grønn merkelapp i listen.
 
 Alle oppgaver, markeringer og svar lagres i nettleserens `localStorage` på enheten.
 

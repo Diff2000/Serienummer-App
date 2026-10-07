@@ -49,7 +49,7 @@
     list.forEach(p => {
       const li = document.createElement('li');
       const done = p.finals.flat().filter(Boolean).length + p.givens.flat().filter(v => v > 0).length;
-      li.innerHTML = '<img alt=""><div class="info"><b></b><span></span></div><button aria-label="Slett">🗑️</button>';
+      li.innerHTML = '<img alt=""><div class="info"><b></b><span></span></div><button class="rn" aria-label="Endre navn">✏️</button><button class="del" aria-label="Slett">🗑️</button>';
       if (p.solved) {
         li.classList.add('solved');
         const bd = document.createElement('span'); bd.className = 'badge'; bd.textContent = '✓ Løst';
@@ -59,7 +59,12 @@
       li.querySelector('b').textContent = p.name;
       li.querySelector('.info span:not(.badge)').textContent = new Date(p.created).toLocaleString('nb-NO') + ' · ' + done + '/64';
       li.addEventListener('click', () => openPlay(p.id));
-      li.querySelector('button').addEventListener('click', e => {
+      li.querySelector('.rn').addEventListener('click', e => {
+        e.stopPropagation();
+        const n = prompt('Nytt navn på oppgaven:', p.name);
+        if (n && n.trim()) { p.name = n.trim().slice(0, 40); persist(p); renderHome(); }
+      });
+      li.querySelector('.del').addEventListener('click', e => {
         e.stopPropagation();
         if (confirm('Slette «' + p.name + '»?')) { saveAll(loadAll().filter(x => x.id !== p.id)); renderHome(); }
       });
@@ -244,6 +249,7 @@
     puz = loadAll().find(p => p.id === id);
     if (!puz) return;
     sel = null; editLines = false;
+    $('play-title-input').hidden = true; $('play-title').hidden = false;
     $('play-title').textContent = puz.name;
     renderPlay(); renderPicker(); renderSolved(); show('play');
   }
@@ -335,6 +341,25 @@
     b.classList.toggle('on', !!puz.solved);
     b.textContent = puz.solved ? '✓ Løst – trykk for å angre' : '✓ Marker som løst';
   }
+  function startRename() {
+    const inp = $('play-title-input');
+    inp.value = puz.name; $('play-title').hidden = true; inp.hidden = false; inp.focus(); inp.select();
+  }
+  function finishRename(save) {
+    const inp = $('play-title-input');
+    if (inp.hidden) return;
+    const v = inp.value.trim();
+    if (save && v) { puz.name = v; persist(puz); }
+    inp.hidden = true; $('play-title').hidden = false; $('play-title').textContent = puz.name;
+  }
+  $('play-title').addEventListener('click', startRename);
+  $('btn-rename').addEventListener('click', startRename);
+  $('play-title-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') finishRename(true);
+    else if (e.key === 'Escape') finishRename(false);
+  });
+  $('play-title-input').addEventListener('blur', () => finishRename(true));
+
   $('btn-edit').addEventListener('click', () => { editLines = !editLines; sel = null; renderPlay(); renderPicker(); });
   $('btn-solved').addEventListener('click', () => {
     puz.solved = !puz.solved;
