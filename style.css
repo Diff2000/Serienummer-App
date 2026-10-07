@@ -26,7 +26,7 @@ h2{font-size:1rem;margin:12px 0 0}
 .list img{width:56px;height:56px;border-radius:6px;object-fit:cover;background:#ddd}
 .list .info{flex:1;min-width:0}
 .list .info b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.list .info span{font-size:.8rem;color:var(--muted)}
+.list .info span{display:block;font-size:.8rem;color:var(--muted)}
 .list button{background:none;border:0;font-size:1.2rem;padding:8px;cursor:pointer;color:var(--muted)}
 
 #crop-wrap{position:relative;touch-action:none}
@@ -72,3 +72,7 @@ h2{font-size:1rem;margin:12px 0 0}
 @keyframes spin{to{transform:rotate(360deg)}}
 details img{width:100%;margin-top:8px;border-radius:8px}
 #version{margin-top:24px;text-align:center;font-size:.75rem;color:var(--muted)}
+
+.list .info .badge{display:inline-block;color:#fff;margin:2px 0;padding:1px 8px;border-radius:99px;background:var(--green);color:#fff;font-size:.75rem;font-weight:600;margin-top:2px}
+.list li.solved{border-left:5px solid var(--green)}
+#btn-solved.on{background:var(--green);border-color:var(--green);color:#fff}

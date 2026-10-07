@@ -28,7 +28,9 @@ jobs:
           N=$(( $(git rev-list --count HEAD) - 5 ))
           VER=$(printf "v%02d.%02d" $(( N / 100 )) $(( N % 100 )))
           sed -i "s/__VERSION__/$VER/" _site/index.html
-          echo "{\"build\":\"${GITHUB_SHA::10}\"}" > _site/version.json
+          echo "{\"build\":\"${GITHUB_SHA::10}\",\"version\":\"$VER\"}" > _site/version.json
+          grep -n 'id="version"' _site/index.html
+          ! grep -q '__VERSION__\|__BUILD__' _site/index.html
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

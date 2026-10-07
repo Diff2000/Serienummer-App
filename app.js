@@ -39,9 +39,14 @@
       const li = document.createElement('li');
       const done = p.finals.flat().filter(Boolean).length + p.givens.flat().filter(v => v > 0).length;
       li.innerHTML = '<img alt=""><div class="info"><b></b><span></span></div><button aria-label="Slett">🗑️</button>';
+      if (p.solved) {
+        li.classList.add('solved');
+        const bd = document.createElement('span'); bd.className = 'badge'; bd.textContent = '✓ Løst';
+        li.querySelector('b').after(bd);
+      }
       li.querySelector('img').src = p.thumb || '';
       li.querySelector('b').textContent = p.name;
-      li.querySelector('span').textContent = new Date(p.created).toLocaleString('nb-NO') + ' · ' + done + '/64';
+      li.querySelector('.info span:not(.badge)').textContent = new Date(p.created).toLocaleString('nb-NO') + ' · ' + done + '/64';
       li.addEventListener('click', () => openPlay(p.id));
       li.querySelector('button').addEventListener('click', e => {
         e.stopPropagation();
@@ -227,7 +232,7 @@
     if (!puz) return;
     sel = null;
     $('play-title').textContent = puz.name;
-    renderPlay(); renderPicker(); show('play');
+    renderPlay(); renderPicker(); renderSolved(); show('play');
   }
 
   function renderPlay() {
@@ -302,6 +307,17 @@
     }
     persist(puz); renderPlay(); renderPicker();
   }
+
+  function renderSolved() {
+    const b = $('btn-solved');
+    b.classList.toggle('on', !!puz.solved);
+    b.textContent = puz.solved ? '✓ Løst – trykk for å angre' : '✓ Marker som løst';
+  }
+  $('btn-solved').addEventListener('click', () => {
+    puz.solved = !puz.solved;
+    puz.solvedAt = puz.solved ? Date.now() : null;
+    persist(puz); renderSolved();
+  });
 
   $('btn-clear').addEventListener('click', () => {
     if (!sel) return;

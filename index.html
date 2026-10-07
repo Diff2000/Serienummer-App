@@ -15,6 +15,8 @@
   fetch('version.json?t=' + Date.now(), { cache: 'no-store' })
     .then(function (r) { return r.json(); })
     .then(function (v) {
+      var f = document.getElementById('version');
+      if (f && v.version) f.textContent = v.version;
       if (v.build && v.build !== BUILD && location.search.indexOf('r=' + v.build) < 0)
         location.replace(location.pathname + '?r=' + v.build);
     }).catch(function () {});
@@ -91,6 +93,7 @@
       </div>
       <button id="btn-clear" class="btn small">Tøm rute</button>
     </div>
+    <button id="btn-solved" class="btn big">✓ Marker som løst</button>
   </main>
 </section>
 
