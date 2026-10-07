@@ -176,19 +176,21 @@
       g.appendChild(cell);
     }
   }
-  function reviewTap(e, cell, r, c) {
+  // Trykk nær en kant for å bytte mellom tykk og tynn linje. Returnerer true hvis en linje ble byttet.
+  function toggleWallAt(walls, e, cell, r, c, m) {
     const b = cell.getBoundingClientRect();
-    const fx = (e.clientX - b.left) / b.width, fy = (e.clientY - b.top) / b.height, m = 0.2;
-    const dists = [[fx, 'l'], [1 - fx, 'r'], [fy, 't'], [1 - fy, 'b']].sort((a, z) => a[0] - z[0]);
-    if (dists[0][0] < m) {
-      const d = dists[0][1];
-      if (d === 'r' && c < N - 1) draft.vWalls[r][c] = !draft.vWalls[r][c];
-      else if (d === 'l' && c > 0) draft.vWalls[r][c - 1] = !draft.vWalls[r][c - 1];
-      else if (d === 'b' && r < N - 1) draft.hWalls[r][c] = !draft.hWalls[r][c];
-      else if (d === 't' && r > 0) draft.hWalls[r - 1][c] = !draft.hWalls[r - 1][c];
-      else return;
-      renderReview(); return;
-    }
+    const fx = (e.clientX - b.left) / b.width, fy = (e.clientY - b.top) / b.height;
+    const d = [[fx, 'l'], [1 - fx, 'r'], [fy, 't'], [1 - fy, 'b']].sort((p, q) => p[0] - q[0])[0];
+    if (d[0] >= m) return false;
+    if (d[1] === 'r' && c < N - 1) walls.vWalls[r][c] = !walls.vWalls[r][c];
+    else if (d[1] === 'l' && c > 0) walls.vWalls[r][c - 1] = !walls.vWalls[r][c - 1];
+    else if (d[1] === 'b' && r < N - 1) walls.hWalls[r][c] = !walls.hWalls[r][c];
+    else if (d[1] === 't' && r > 0) walls.hWalls[r - 1][c] = !walls.hWalls[r - 1][c];
+    else return false;
+    return true;
+  }
+  function reviewTap(e, cell, r, c) {
+    if (toggleWallAt(draft, e, cell, r, c, 0.2)) { renderReview(); return; }
     reviewSel = [r, c];
     renderReview(); renderReviewPicker();
   }
@@ -236,23 +238,32 @@
   });
 
   /* ---------- Spill ---------- */
-  let puz = null, sel = null;
+  let puz = null, sel = null, editLines = false;
 
   function openPlay(id) {
     puz = loadAll().find(p => p.id === id);
     if (!puz) return;
-    sel = null;
+    sel = null; editLines = false;
     $('play-title').textContent = puz.name;
     renderPlay(); renderPicker(); renderSolved(); show('play');
   }
 
   function renderPlay() {
     const g = $('play-grid'); g.innerHTML = '';
+    g.classList.toggle('editing', editLines);
+    $('picker').hidden = editLines;
+    $('edit-hint').hidden = !editLines;
+    $('btn-edit').classList.toggle('on', editLines);
+    $('btn-edit').textContent = editLines ? '✔ Ferdig med linjer' : '✏️ Rediger linjer';
     for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
       const cell = document.createElement('div');
       cell.className = 'cell';
       wallClasses(cell, r, c, puz.vWalls, puz.hWalls);
       const given = puz.givens[r][c];
+      cell.addEventListener('click', e => {
+        if (!editLines) return;
+        if (toggleWallAt(puz, e, cell, r, c, 0.3)) { persist(puz); renderPlay(); }
+      });
       if (given > 0) { cell.classList.add('given'); cell.textContent = given; }
       else {
         if (sel && sel[0] === r && sel[1] === c) cell.classList.add('selected');
@@ -271,7 +282,7 @@
           }
           cell.appendChild(box);
         }
-        cell.addEventListener('click', () => { sel = [r, c]; renderPlay(); renderPicker(); });
+        cell.addEventListener('click', () => { if (editLines) return; sel = [r, c]; renderPlay(); renderPicker(); });
       }
       g.appendChild(cell);
     }
@@ -324,6 +335,7 @@
     b.classList.toggle('on', !!puz.solved);
     b.textContent = puz.solved ? '✓ Løst – trykk for å angre' : '✓ Marker som løst';
   }
+  $('btn-edit').addEventListener('click', () => { editLines = !editLines; sel = null; renderPlay(); renderPicker(); });
   $('btn-solved').addEventListener('click', () => {
     puz.solved = !puz.solved;
     puz.solvedAt = puz.solved ? Date.now() : null;
